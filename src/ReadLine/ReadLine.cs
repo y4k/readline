@@ -1,62 +1,30 @@
-﻿using Internal.ReadLine;
-using Internal.ReadLine.Abstractions;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace System
 {
+    /// <summary>
+    /// Static class for simple access where only a single Readline processor is used
+    /// </summary>
     public static class ReadLine
     {
-        private static List<string> _history;
+        private static readonly ReadlineProcessor _instance = new();
 
-        static ReadLine()
+        public static bool HistoryEnabled
         {
-            _history = new List<string>();
+            get => _instance.HistoryEnabled;
+            set => _instance.HistoryEnabled = value;
         }
 
-        public static void AddHistory(params string[] text) => _history.AddRange(text);
-        public static List<string> GetHistory() => _history;
-        public static void ClearHistory() => _history = new List<string>();
-        public static bool HistoryEnabled { get; set; }
-        public static IAutoCompleteHandler AutoCompletionHandler { private get; set; }
+        public static IAutoCompleteHandler AutoCompletionHandler { internal get => _instance.AutoCompletionHandler; set => _instance.AutoCompletionHandler = value; }
 
-        public static string Read(string prompt = "", string @default = "")
-        {
-            Console.Write(prompt);
-            KeyHandler keyHandler = new KeyHandler(new Console2(), _history, AutoCompletionHandler);
-            string text = GetText(keyHandler);
+        public static void AddHistory(params string[] text) => _instance.AddHistory(text);
 
-            if (String.IsNullOrWhiteSpace(text) && !String.IsNullOrWhiteSpace(@default))
-            {
-                text = @default;
-            }
-            else
-            {
-                if (HistoryEnabled)
-                    _history.Add(text);
-            }
+        public static IReadOnlyList<string> GetHistory() => _instance.GetHistory();
 
-            return text;
-        }
+        public static void ClearHistory() => _instance.ClearHistory();
 
-        public static string ReadPassword(string prompt = "")
-        {
-            Console.Write(prompt);
-            KeyHandler keyHandler = new KeyHandler(new Console2() { PasswordMode = true }, null, null);
-            return GetText(keyHandler);
-        }
+        public static string Read(string prompt = "", string @default = "") => _instance.Read(prompt, @default);
 
-        private static string GetText(KeyHandler keyHandler)
-        {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            while (keyInfo.Key != ConsoleKey.Enter)
-            {
-                keyHandler.Handle(keyInfo);
-                keyInfo = Console.ReadKey(true);
-            }
-
-            Console.WriteLine();
-            return keyHandler.Text;
-        }
+        public static string ReadPassword(string prompt = "") => _instance.ReadPassword(prompt);
     }
 }

@@ -25,7 +25,7 @@ namespace Internal.ReadLine.Abstractions
         public void Write(string value)
         {
             if (PasswordMode)
-                value = new String(default(char), value.Length);
+                value = new string(default, value.Length);
 
             Console.Write(value);
         }

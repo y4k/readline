@@ -11,7 +11,7 @@ namespace Internal.ReadLine
         private int _cursorPos;
         private int _cursorLimit;
         private StringBuilder _text;
-        private List<string> _history;
+        private IReadOnlyList<string> _history;
         private int _historyIndex;
         private ConsoleKeyInfo _keyInfo;
         private Dictionary<string, Action> _keyActions;
@@ -152,7 +152,7 @@ namespace Internal.ReadLine
         {
             // local helper functions
             bool almostEndOfLine() => (_cursorLimit - _cursorPos) == 1;
-            int incrementIf(Func<bool> expression, int index) =>  expression() ? index + 1 : index;
+            int incrementIf(Func<bool> expression, int index) => expression() ? index + 1 : index;
             int decrementIf(Func<bool> expression, int index) => expression() ? index - 1 : index;
 
             if (IsStartOfLine()) { return; }
@@ -246,7 +246,7 @@ namespace Internal.ReadLine
             }
         }
 
-        public KeyHandler(IConsole console, List<string> history, IAutoCompleteHandler autoCompleteHandler)
+        public KeyHandler(IConsole console, IReadOnlyList<string> history, IAutoCompleteHandler autoCompleteHandler)
         {
             Console2 = console;
 
