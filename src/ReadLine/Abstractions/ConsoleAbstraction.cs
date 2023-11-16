@@ -2,7 +2,7 @@ using System;
 
 namespace Internal.ReadLine.Abstractions
 {
-    internal class Console2 : IConsole
+    internal class ConsoleAbstraction : IConsole
     {
         public int CursorLeft => Console.CursorLeft;
 

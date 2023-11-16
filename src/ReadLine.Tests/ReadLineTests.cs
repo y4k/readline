@@ -15,21 +15,21 @@ namespace ReadLine.Tests
         }
 
         [Fact]
-        public void TestNoInitialHistory() 
+        public void TestNoInitialHistory()
         {
             Assert.Equal(3, GetHistory().Count);
         }
 
         [Fact]
-        public void TestUpdatesHistory() 
+        public void TestUpdatesHistory()
         {
             AddHistory("mkdir");
             Assert.Equal(4, GetHistory().Count);
-            Assert.Equal("mkdir", GetHistory().Last());
+            Assert.Equal("mkdir", GetHistory()[GetHistory().Count - 1]);
         }
 
         [Fact]
-        public void TestGetCorrectHistory() 
+        public void TestGetCorrectHistory()
         {
             Assert.Equal("ls -a", GetHistory()[0]);
             Assert.Equal("dotnet run", GetHistory()[1]);
